@@ -5,6 +5,7 @@ import CategoriesTree from './Components/CategoriesTree';
 import Product from './Components/Product';
 import Review from './Components/Review';
 import User from './Components/User'
+import ListOfProducts from './Components/ListOfProducts'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/review" element={<Review />} />
         <Route path="/user" element={<User />} />
+        <Route path="/listofProduct/:pattern" element={<ListOfProducts />} />
       </Routes>
     </div>
   );
