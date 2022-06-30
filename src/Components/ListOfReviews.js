@@ -18,8 +18,8 @@ export default function ListOfReviews() {
     let { parm1, parm2 } = useParams();
 
     useEffect(() => {
-        if (parm1 === "bypattern") {
-            fetch(`http://localhost:8080/findAllByPattern/${parm2}`).then(res => res.json()).then(data => setProducts(data));
+        if (parm1 === "all") {
+            fetch(`http://localhost:8080/review/getReviews`).then(res => res.json()).then(data => setProducts(data));
         }
     }, []);
 
@@ -33,7 +33,7 @@ export default function ListOfReviews() {
                         <TableCell align="center">date</TableCell>
                         <TableCell align="center">helpful</TableCell>
                         <TableCell align="center">rating</TableCell>
-                        <TableCell align="center">summary</TableCell>
+                        <TableCell align="center">summery</TableCell>
                         <TableCell align="center">person</TableCell>
                         <TableCell align="center">product_id</TableCell>
                     </TableRow>
@@ -49,9 +49,9 @@ export default function ListOfReviews() {
                             <TableCell align="center">{row?.date}</TableCell>
                             <TableCell align="center">{row?.helpful}</TableCell>
                             <TableCell align="center">{row?.rating}</TableCell>
-                            <TableCell align="center">{row?.summary}</TableCell>
-                            <TableCell align="center">{row?.person}</TableCell>
-                            <TableCell align="center">{row?.product_id}</TableCell>
+                            <TableCell align="center">{row?.summery}</TableCell>
+                            <TableCell align="center">{row?.person.id}</TableCell>
+                            <TableCell align="center">{row?.product_review.id}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

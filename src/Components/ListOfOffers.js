@@ -18,7 +18,7 @@ export default function ListOfReviews() {
     let { id } = useParams();
 
     useEffect(() => {
-            fetch(`http://localhost:8080/GetOffers/${id}`).then(res => res.json()).then(data => setProducts(data));
+        fetch(`http://localhost:8080/product/GetOffers/${id}`).then(res => res.json()).then(data => setProducts(data));
     }, []);
 
     return (
