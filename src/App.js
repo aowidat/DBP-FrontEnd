@@ -3,9 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './Components/Home';
 import CategoriesTree from './Components/CategoriesTree';
 import Product from './Components/Product';
-import Review from './Components/Review';
+import Review from './Components/ListOfReviews';
 import User from './Components/User'
 import ListOfProducts from './Components/ListOfProducts'
+import ListOfOffers from './Components/ListOfOffers'
 
 function App() {
   return (
@@ -13,10 +14,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Categoriestree" element={<CategoriesTree />} />
-        <Route path="/product/:id" element={<Product />} />
+        <Route path="/product/:parm1/:parm2" element={<ListOfProducts />} />
         <Route path="/review" element={<Review />} />
         <Route path="/user" element={<User />} />
-        <Route path="/listofProduct/:pattern" element={<ListOfProducts />} />
+          <Route path="/getoffers/:id" element={<ListOfOffers />} />
       </Routes>
     </div>
   );
