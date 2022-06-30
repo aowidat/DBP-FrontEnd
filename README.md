@@ -1,4 +1,4 @@
-###Used Library###:
+###Used Library:
 #-Material UI
 
 # Getting Started with Create React App
