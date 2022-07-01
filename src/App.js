@@ -10,7 +10,6 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import CssBaseline from "@mui/material/CssBaseline";
-import AdbIcon from "@mui/icons-material/Adb";
 import Container from "@mui/material/Container";
 
 function App() {

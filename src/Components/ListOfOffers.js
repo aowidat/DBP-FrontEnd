@@ -72,7 +72,6 @@ export default function ListOfReviews() {
       {products && (
         <DataGrid
           experimentalFeatures={{ newEditingApi: true }}
-          getRowHeight={() => "auto"}
           rows={products}
           columns={columns}
           pageSize={10}

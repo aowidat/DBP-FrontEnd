@@ -1,81 +1,32 @@
 import * as React from "react";
-import { DataGrid, GridToolbar, useGridApiContext } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
-import { Avatar, Button, createTheme, styled } from "@mui/material";
+import { Avatar, Button, createTheme } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { ThemeProvider } from "@emotion/react";
 
 function renderRating(params) {
-  return <Rating readOnly value={params.value} />;
+  return <Rating readOnly precision={0.25} value={params.value} />;
 }
 
 function renderImage(params) {
   return <Avatar readOnly src={params.value} />;
 }
 
-renderRating.propTypes = {
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.number,
-};
-function RatingEditInputCell(props) {
-  const { id, value, field } = props;
-  const apiRef = useGridApiContext();
-
-  const handleChange = (event, newValue) => {
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  };
-
-  const handleRef = (element) => {
-    if (element) {
-      const input = element.querySelector(`input[value="${value}"]`);
-
-      input?.focus();
-    }
-  };
-
-  return (
-    <Box sx={{ display: "flex", alignItems: "center", pr: 2 }}>
-      <Rating
-        ref={handleRef}
-        name="half-rating-read"
-        precision={0.5}
-        value={value}
-        onChange={handleChange}
-        readOnly
-        // emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-      />
-    </Box>
-  );
-}
-
-RatingEditInputCell.propTypes = {
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.number,
-};
-
-const renderRatingEditInputCell = (params) => {
-  return <RatingEditInputCell {...params} />;
-};
-
 export default function ListOfProducts() {
   const [selectedRows, setSelectedRows] = useState([]);
   const columns = [
+    {
+      field: "image",
+      headerName: "Image",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+      renderCell: renderImage,
+
+    },
     {
       field: "id",
       headerName: "id",
@@ -90,8 +41,6 @@ export default function ListOfProducts() {
       headerAlign: "center",
       align: "center",
       renderCell: renderRating,
-      renderEditCell: renderRatingEditInputCell,
-      editable: true,
     },
     {
       field: "salesRank",
@@ -130,7 +79,6 @@ export default function ListOfProducts() {
       headerAlign: "center",
       align: "center",
     },
-    // {field: 'runningTime', headerName: 'Running time', width: 100, headerAlign: "center",align: "center"},
     {
       field: "edition",
       headerName: "Edition",
@@ -152,18 +100,9 @@ export default function ListOfProducts() {
       headerAlign: "center",
       align: "center",
     },
-    {
-      field: "image",
-      headerName: "Image",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      renderCell: renderImage,
-    },
   ];
   const myTheme = createTheme({
     components: {
-      //@ts-ignore - this isn't in the TS because DataGird is not exported from `@mui/material`
       MuiDataGrid: {
         styleOverrides: {
           row: {
@@ -224,12 +163,11 @@ export default function ListOfProducts() {
               setSelectedRows(selectedRows);
             }}
             experimentalFeatures={{ newEditingApi: true }}
-            getRowHeight={() => "auto"}
             rows={products}
             columns={columns}
-            pageSize={10}
+            pageSize={9}
             columnSizer="Star"
-            rowsPerPageOptions={[10]}
+            rowsPerPageOptions={[9]}
             components={{
               Toolbar: GridToolbar,
             }}
@@ -248,10 +186,10 @@ export default function ListOfProducts() {
           direction="row"
           spacing={2}
           style={{
-            position: "absolute",
-            left: "50%",
-            top: "85%",
-            transform: "translate(-50%, -50%)",
+            position: "relative",
+            left: '300px',
+            // top: "102%",
+            // transform: "translate(-50%, -50%)",
           }}
         >
           <Button
