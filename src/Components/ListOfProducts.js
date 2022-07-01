@@ -7,8 +7,9 @@ import {
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import {Button} from "@mui/material";
+import {Button, createTheme, styled} from "@mui/material";
 import Stack from "@mui/material/Stack";
+import {ThemeProvider} from "@emotion/react";
 
 function renderRating(params) {
     return <Rating readOnly value={params.value} />;
@@ -87,7 +88,24 @@ export default function ListOfProducts() {
         {field: 'page', headerName: 'Pages', width: 100, headerAlign: "center",align: "center"},
         { field: 'image', headerName: 'Image', width: 150 , headerAlign: "center",align: "center"},
     ];
-
+    const myTheme = createTheme({
+        components: {
+            //@ts-ignore - this isn't in the TS because DataGird is not exported from `@mui/material`
+            MuiDataGrid: {
+                styleOverrides: {
+                    row: {
+                        "&.Mui-selected": {
+                            backgroundColor: "lightblue",
+                            color: "black",
+                            "&:hover": {
+                                backgroundColor: "lightgreen"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
     const [products, setProducts] = useState();
     let { parm1,parm2 } = useParams();
     useEffect(() => {
@@ -119,17 +137,16 @@ export default function ListOfProducts() {
     }, []);
 
     return (
-
+        <ThemeProvider theme={myTheme}>
         <div style={ { height: 650 , width: '100%' }}>
             {products && <DataGrid
-
                 onSelectionModelChange={(ids) => {
                     const selectedIDs = new Set(ids);
                     const selectedRows = products.filter((row) =>
                         selectedIDs.has(row.id)
                     );
-
                     setSelectedRows(selectedRows);
+
                 }}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowHeight={() => 'auto'}
@@ -140,7 +157,10 @@ export default function ListOfProducts() {
                 rowsPerPageOptions={[10]}
                 components={{
                     Toolbar: GridToolbar,
-                }}
+
+                }
+                }
+
                 sx={{
                     m:5,
                     boxShadow: 2,
@@ -150,7 +170,12 @@ export default function ListOfProducts() {
                         color: 'primary.main',
                     },
                 }}/>}
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={2} style={{
+                position: 'absolute',
+                left: '50%',
+                top: '80%',
+                transform: 'translate(-50%, -50%)'
+            }}>
                 <Button variant="contained" href={`/getoffers/${selectedRows[0]?.id}`}>
                     Offers
                 </Button>
@@ -159,5 +184,6 @@ export default function ListOfProducts() {
                 </Button>
             </Stack>
         </div>
+        </ThemeProvider>
     );
 }
