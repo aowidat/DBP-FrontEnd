@@ -18,9 +18,11 @@ function Home() {
                 getCategoriesTree
             </Link>
             <br />
-            <Link to="/Review">
-                getReview
-            </Link>
+            <div className="p-3 text-center">
+                <Link to={`/review/all/nnn`}>
+                    get all Reviews
+                </Link>
+            </div>
             <br />
             <div className="p-3 text-center">
                 <Link to={`/product/byId/${id}`}>

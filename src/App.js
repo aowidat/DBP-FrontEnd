@@ -14,9 +14,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Categoriestree" element={<CategoriesTree />} />
         <Route path="/product/:parm1/:parm2" element={<ListOfProducts />} />
-        <Route path="/review" element={<Review />} />
+        <Route path="/review/:parm1/:parm2" element={<Review />} />
         <Route path="/user" element={<User />} />
-          <Route path="/getoffers/:id" element={<ListOfOffers />} />
+        <Route path="/getoffers/:id" element={<ListOfOffers />} />
       </Routes>
     </div>
   );
