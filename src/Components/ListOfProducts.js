@@ -264,7 +264,7 @@ export default function ListOfProducts() {
           <Button
             disabled={isSelected}
             variant="contained"
-            href={`/review/addOne/${selectedRows[0]?.id}`}
+            href={`/review/${selectedRows[0]?.id}`}
           >
             add review
           </Button>
