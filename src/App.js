@@ -2,7 +2,6 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Components/Home';
 import CategoriesTree from './Components/CategoriesTree';
-import Product from './Components/Product';
 import Review from './Components/ListOfReviews';
 import User from './Components/User'
 import ListOfProducts from './Components/ListOfProducts'

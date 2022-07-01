@@ -1,96 +1,147 @@
 import * as React from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Paper from "@mui/material/Paper";
+import {DataGrid, GridToolbar, useGridApiContext} from '@mui/x-data-grid';
 import { useEffect, useState } from "react";
 import {
-    Link,
     useParams,
 } from "react-router-dom";
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
+
+function renderRating(params) {
+    return <Rating readOnly value={params.value} />;
+}
+
+renderRating.propTypes = {
+    /**
+     * The cell value, but if the column has valueGetter, use getValue.
+     */
+    value: PropTypes.number,
+};
+function RatingEditInputCell(props) {
+    const { id, value, field } = props;
+    const apiRef = useGridApiContext();
+
+    const handleChange = (event, newValue) => {
+        apiRef.current.setEditCellValue({ id, field, value: newValue });
+    };
+
+    const handleRef = (element) => {
+        if (element) {
+            const input = element.querySelector(`input[value="${value}"]`);
+
+            input?.focus();
+        }
+    };
+
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
+            <Rating
+                ref={handleRef}
+                name="half-rating-read"
+                precision={0.5}
+                value={value}
+                onChange={handleChange}
+                readOnly
+                // emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+            />
+        </Box>
+    );
+}
+
+RatingEditInputCell.propTypes = {
+    /**
+     * The column field of the cell that triggered the event.
+     */
+    field: PropTypes.string.isRequired,
+    /**
+     * The grid row id.
+     */
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    /**
+     * The cell value, but if the column has valueGetter, use getValue.
+     */
+    value: PropTypes.number,
+};
+
+const renderRatingEditInputCell = (params) => {
+    return <RatingEditInputCell {...params} />;
+};
 
 export default function ListOfProducts() {
-    const [products, setProducts] = useState();
-    let { parm1, parm2 } = useParams();
+    const columns = [
+        { field: 'id', headerName: 'id', width: 150 , headerAlign: "center",align: "center"},
+        { field: 'rating', headerName: 'Rating', width: 150 , headerAlign: "center",align: "center", renderCell: renderRating,
+            renderEditCell: renderRatingEditInputCell, editable: true},
+        {field: 'salesRank', headerName: 'salesRank', type: 'number', width: 100, headerAlign: "center",align: "center"},
+        { field: 'title', headerName: 'title', width: 220 , headerAlign: "center",align: "left"},
+        {field: 'binding', headerName: 'Binding', width: 200, headerAlign: "center",align: "center"},
+        {field: 'date', headerName: 'Date', width: 100, headerAlign: "center",align: "center"},
+        {field: 'format', headerName: 'Format', type: 'number', width: 150, headerAlign: "center", align: "center"},
+        {field: 'runningTime', headerName: 'Running time', width: 100, headerAlign: "center",align: "center"},
+        {field: 'edition', headerName: 'Edition', width: 100, headerAlign: "center",align: "center"},
+        {field: 'isbn', headerName: 'ISNB', width: 100, headerAlign: "center",align: "center"},
+        {field: 'page', headerName: 'Pages', width: 100, headerAlign: "center",align: "center"},
 
+    ];
+
+    const [products, setProducts] = useState();
+    let { parm1,parm2 } = useParams();
     useEffect(() => {
         if (parm1 === "bypattern") {
-            fetch(`http://localhost:8080/findAllByPattern/${parm2}`).then(res => res.json()).then(data => setProducts(data));
+            fetch(`http://localhost:8080/product/findAllByPattern/${parm2}`)
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
         } else if (parm1 === "byId") {
-            fetch(`http://localhost:8080/findById/${parm2}`).then(res => res.json()).then(data => setProducts(data));
-        } else if(parm1 ==="allproduct"){
-            fetch(`http://localhost:8080/getAllProduct/`).then(res => res.json()).then(data => setProducts(data));
-        } else if(parm1 ==="similars"){
-            fetch(`http://localhost:8080/getSimilarCheaperProduct/${parm2}`).then(res => res.json()).then(data => setProducts(data));
-        } else if(parm1 === "topproduct"){
-            fetch(`http://localhost:8080/TopProducts/`).then(res => res.json()).then(data => setProducts(data));
-        } else if(parm1 === "byPath"){
-            fetch(`http://localhost:8080/category/productPerPath/${parm2}`).then(res => res.json()).then(data => setProducts(data));
+            fetch(`http://localhost:8080/product/findById/${parm2}`)
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
+        } else if (parm1 === "allproduct") {
+            fetch(`http://localhost:8080/product/getAllProduct/`)
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
+        } else if (parm1 === "similars") {
+            fetch(`http://localhost:8080/product/getSimilarCheaperProduct/${parm2}`)
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
+        } else if (parm1 === "topproduct") {
+            fetch(`http://localhost:8080/product/TopProducts/`)
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
+        } else if (parm1 === "byPath") {
+            fetch(`http://localhost:8080/category/productPerPath/${parm2}`)
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
         }
     }, []);
 
     return (
-    <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-                <TableRow>
-                    <TableCell align="center">Reviews/Offers</TableCell>
-                    <TableCell align="center">id</TableCell>
-                    <TableCell align="center">image</TableCell>
-                    <TableCell align="center">rating</TableCell>
-                    <TableCell align="center">salesRank</TableCell>
-                    <TableCell align="center">title</TableCell>
-                    <TableCell align="center">binding</TableCell>
-                    <TableCell align="center">date</TableCell>
-                    <TableCell align="center">disc_Nr</TableCell>
-                    <TableCell align="center">format</TableCell>
-                    <TableCell align="center">region_code</TableCell>
-                    <TableCell align="center">runningTime</TableCell>
-                    <TableCell align="center">theaterRelease</TableCell>
-                    <TableCell align="center">edition</TableCell>
-                    <TableCell align="center">isbn</TableCell>
-                    <TableCell align="center">page</TableCell>
-                    <TableCell align="center">height</TableCell>
-                    <TableCell align="center">length</TableCell>
-                    <TableCell align="center">weight</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {products?.map((row) => (
-                    <TableRow
-                        key={row.id}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                        <Stack spacing={1} direction = "row" ><Button variant="contained">Reviews</Button>
-                        <Button variant="contained" href={`/getoffers/${row?.id}`}> offers
-                        </Button></Stack>
-                        <TableCell align="center">{row?.id}</TableCell>
-                        <TableCell align="center">{row?.image}</TableCell>
-                        <TableCell align="center">{row?.rating}</TableCell>
-                        <TableCell align="center">{row?.salesRank}</TableCell>
-                        <TableCell align="center">{row?.title}</TableCell>
-                        <TableCell align="center">{row?.binding}</TableCell>
-                        <TableCell align="center">{row?.date}</TableCell>
-                        <TableCell align="center">{row?.disc_Nr}</TableCell>
-                        <TableCell align="center">{row?.format}</TableCell>
-                        <TableCell align="center">{row?.region_code}</TableCell>
-                        <TableCell align="center">{row?.runningTime}</TableCell>
-                        <TableCell align="center">{row?.theaterRelease}</TableCell>
-                        <TableCell align="center">{row?.edition}</TableCell>
-                        <TableCell align="center">{row?.isbn}</TableCell>
-                        <TableCell align="center">{row?.page}</TableCell>
-                        <TableCell align="center">{row?.height}</TableCell>
-                        <TableCell align="center">{row?.length}</TableCell>
-                        <TableCell align="center">{row?.weight}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </TableContainer>
+
+        <div style={ { height: 650 , width: '100%' }}>
+
+            {products && <DataGrid
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowHeight={() => 'auto'}
+                rows={products}
+                columns={columns}
+                pageSize={10}
+                columnSizer="Star"
+                rowsPerPageOptions={[10]}
+                components={{
+                    Toolbar: GridToolbar,
+                }}
+                sx={{
+                    m:5,
+                    boxShadow: 2,
+                    border: 2,
+                    borderColor: 'primary.light',
+                    '& .MuiDataGrid-cell:hover': {
+                        color: 'primary.main',
+                    },
+                }}
+            />}
+
+
+        </div>
     );
 }
