@@ -7,6 +7,8 @@ import {
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
+import {Button} from "@mui/material";
+import Stack from "@mui/material/Stack";
 
 function renderRating(params) {
     return <Rating readOnly value={params.value} />;
@@ -69,8 +71,9 @@ const renderRatingEditInputCell = (params) => {
 };
 
 export default function ListOfProducts() {
+    const [selectedRows, setSelectedRows] = useState([]);
     const columns = [
-        { field: 'id', headerName: 'id', width: 150 , headerAlign: "center",align: "center"},
+        {  field: 'id', headerName: 'id', width: 150 , headerAlign: "center",align: "center"},
         { field: 'rating', headerName: 'Rating', width: 150 , headerAlign: "center",align: "center", renderCell: renderRating,
             renderEditCell: renderRatingEditInputCell, editable: true},
         {field: 'salesRank', headerName: 'salesRank', type: 'number', width: 100, headerAlign: "center",align: "center"},
@@ -78,11 +81,11 @@ export default function ListOfProducts() {
         {field: 'binding', headerName: 'Binding', width: 200, headerAlign: "center",align: "center"},
         {field: 'date', headerName: 'Date', width: 100, headerAlign: "center",align: "center"},
         {field: 'format', headerName: 'Format', type: 'number', width: 150, headerAlign: "center", align: "center"},
-        {field: 'runningTime', headerName: 'Running time', width: 100, headerAlign: "center",align: "center"},
+        // {field: 'runningTime', headerName: 'Running time', width: 100, headerAlign: "center",align: "center"},
         {field: 'edition', headerName: 'Edition', width: 100, headerAlign: "center",align: "center"},
         {field: 'isbn', headerName: 'ISNB', width: 100, headerAlign: "center",align: "center"},
         {field: 'page', headerName: 'Pages', width: 100, headerAlign: "center",align: "center"},
-
+        { field: 'image', headerName: 'Image', width: 150 , headerAlign: "center",align: "center"},
     ];
 
     const [products, setProducts] = useState();
@@ -118,8 +121,16 @@ export default function ListOfProducts() {
     return (
 
         <div style={ { height: 650 , width: '100%' }}>
-
             {products && <DataGrid
+
+                onSelectionModelChange={(ids) => {
+                    const selectedIDs = new Set(ids);
+                    const selectedRows = products.filter((row) =>
+                        selectedIDs.has(row.id)
+                    );
+
+                    setSelectedRows(selectedRows);
+                }}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowHeight={() => 'auto'}
                 rows={products}
@@ -138,10 +149,15 @@ export default function ListOfProducts() {
                     '& .MuiDataGrid-cell:hover': {
                         color: 'primary.main',
                     },
-                }}
-            />}
-
-
+                }}/>}
+            <Stack direction="row" spacing={2}>
+                <Button variant="contained" href={`/getoffers/${selectedRows[0]?.id}`}>
+                    Offers
+                </Button>
+                <Button variant="contained" href="#contained-buttons">
+                    add review
+                </Button>
+            </Stack>
         </div>
     );
 }

@@ -10,8 +10,19 @@ import { useEffect, useState } from "react";
 import {
     useParams,
 } from "react-router-dom";
+import {DataGrid, GridToolbar} from "@mui/x-data-grid";
+import Stack from "@mui/material/Stack";
+import {Button} from "@mui/material";
 
 export default function ListOfReviews() {
+    const columns = [
+        {  field: 'id', headerName: 'id', width: 150 , headerAlign: "center",align: "center"},
+        {  field: 'price', headerName: 'Price', width: 150 , headerAlign: "center",align: "center"},
+        {  field: 'status', headerName: 'Status', width: 150 , headerAlign: "center",align: "center"},
+        {  field: 'product_id', headerName: 'Product ID', width: 150 , headerAlign: "center",align: "center" , valueGetter: () => {let result = id; return result;}},
+        {  field: 'store', headerName: 'Store', width: 150 , headerAlign: "center",align: "center", valueGetter: (params) => { let result = params.row.store.id;  return result}},
+
+    ]
     const [products, setProducts] = useState();
     let { id } = useParams();
 
@@ -19,34 +30,30 @@ export default function ListOfReviews() {
         fetch(`http://localhost:8080/product/GetOffers/${id}`).then(res => res.json()).then(data => setProducts(data));
     }, []);
 
-    return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center">id</TableCell>
-                        <TableCell align="center">price</TableCell>
-                        <TableCell align="center">status</TableCell>
-                        <TableCell align="center">product_id</TableCell>
-                        <TableCell align="center">store_id</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {products?.map((row) => (
-                        <TableRow
-                            key={row.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell align="center">{row?.id}</TableCell>
-                            <TableCell align="center">{row?.price}</TableCell>
-                            <TableCell align="center">{row?.status}</TableCell>
-                            <TableCell align="center">{id}</TableCell>
-                            <TableCell align="center">{row?.store.id}</TableCell>
 
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+    return (
+
+        <div style={ { height: 650 , width: '100%' }}>
+            {products &&<DataGrid
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowHeight={() => 'auto'}
+                rows={products}
+                columns={columns}
+                pageSize={10}
+                columnSizer="Star"
+                rowsPerPageOptions={[10]}
+                components={{
+                    Toolbar: GridToolbar,
+                }}
+                sx={{
+                    m:5,
+                    boxShadow: 2,
+                    border: 2,
+                    borderColor: 'primary.light',
+                    '& .MuiDataGrid-cell:hover': {
+                        color: 'primary.main',
+                    },
+                }}/>}
+        </div>
     );
 }

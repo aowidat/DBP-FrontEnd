@@ -12,8 +12,15 @@ import { useEffect, useState } from "react";
 import {
     useParams,
 } from "react-router-dom";
+import {DataGrid, GridToolbar} from "@mui/x-data-grid";
+
 
 export default function ListOfReviews() {
+    const columns = [
+        { field: 'id', headerName: 'id', width: 150 , headerAlign: "center",align: "center"},
+
+        ]
+
     const [products, setProducts] = useState();
     let { parm1, parm2 } = useParams();
 
@@ -24,38 +31,33 @@ export default function ListOfReviews() {
     }, []);
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center">id</TableCell>
-                        <TableCell align="center">content</TableCell>
-                        <TableCell align="center">date</TableCell>
-                        <TableCell align="center">helpful</TableCell>
-                        <TableCell align="center">rating</TableCell>
-                        <TableCell align="center">summery</TableCell>
-                        <TableCell align="center">person</TableCell>
-                        <TableCell align="center">product_id</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {products?.map((row) => (
-                        <TableRow
-                            key={row.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell align="center">{row?.id}</TableCell>
-                            <TableCell align="center">{row?.content}</TableCell>
-                            <TableCell align="center">{row?.date}</TableCell>
-                            <TableCell align="center">{row?.helpful}</TableCell>
-                            <TableCell align="center">{row?.rating}</TableCell>
-                            <TableCell align="center">{row?.summery}</TableCell>
-                            <TableCell align="center">{row?.person.id}</TableCell>
-                            <TableCell align="center">{row?.product_review.id}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <div style={ { height: 650 , width: '100%' }}>
+
+            {products && <DataGrid
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowHeight={() => 'auto'}
+                rows={products}
+                columns={columns}
+                pageSize={10}
+                columnSizer="Star"
+                rowsPerPageOptions={[10]}
+                components={{
+                    Toolbar: GridToolbar,
+                }}
+                sx={{
+                    m:5,
+                    boxShadow: 2,
+                    border: 2,
+                    borderColor: 'primary.light',
+                    '& .MuiDataGrid-cell:hover': {
+                        color: 'primary.main',
+                    },
+                }}
+            />}
+
+
+        </div>
     );
+
+
 }
