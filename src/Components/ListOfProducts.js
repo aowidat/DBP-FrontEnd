@@ -7,12 +7,16 @@ import {
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import {Button, createTheme, styled} from "@mui/material";
+import {Avatar, Button, createTheme, styled} from "@mui/material";
 import Stack from "@mui/material/Stack";
 import {ThemeProvider} from "@emotion/react";
 
 function renderRating(params) {
-    return <Rating readOnly value={params.value} />;
+    return <Rating readOnly value={params.value}/>;
+}
+
+function renderImage(params) {
+    return <Avatar readOnly src={params.value} />;
 }
 
 renderRating.propTypes = {
@@ -86,7 +90,7 @@ export default function ListOfProducts() {
         {field: 'edition', headerName: 'Edition', width: 100, headerAlign: "center",align: "center"},
         {field: 'isbn', headerName: 'ISNB', width: 100, headerAlign: "center",align: "center"},
         {field: 'page', headerName: 'Pages', width: 100, headerAlign: "center",align: "center"},
-        { field: 'image', headerName: 'Image', width: 150 , headerAlign: "center",align: "center"},
+        { field: 'image', headerName: 'Image', width: 150 , headerAlign: "center",align: "center" , renderCell:renderImage},
     ];
     const myTheme = createTheme({
         components: {
@@ -173,7 +177,7 @@ export default function ListOfProducts() {
             <Stack direction="row" spacing={2} style={{
                 position: 'absolute',
                 left: '50%',
-                top: '80%',
+                top: '85%',
                 transform: 'translate(-50%, -50%)'
             }}>
                 <Button variant="contained" href={`/getoffers/${selectedRows[0]?.id}`}>
