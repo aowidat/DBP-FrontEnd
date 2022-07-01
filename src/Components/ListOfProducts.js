@@ -180,6 +180,7 @@ export default function ListOfProducts() {
     },
   });
   const [products, setProducts] = useState();
+  const [isSelected, setIsSelected] = useState(true);
   let { parm1, parm2 } = useParams();
   useEffect(() => {
     if (parm1 === "bypattern") {
@@ -219,6 +220,7 @@ export default function ListOfProducts() {
               const selectedRows = products.filter((row) =>
                 selectedIDs.has(row.id)
               );
+              setIsSelected(false);
               setSelectedRows(selectedRows);
             }}
             experimentalFeatures={{ newEditingApi: true }}
@@ -254,11 +256,16 @@ export default function ListOfProducts() {
         >
           <Button
             variant="contained"
+            disabled={isSelected}
             href={`/getoffers/${selectedRows[0]?.id}`}
           >
             Offers
           </Button>
-          <Button variant="contained" href="#contained-buttons">
+          <Button
+            disabled={isSelected}
+            variant="contained"
+            href={`/review/addOne/${selectedRows[0]?.id}`}
+          >
             add review
           </Button>
         </Stack>
