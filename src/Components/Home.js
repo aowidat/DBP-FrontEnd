@@ -13,7 +13,6 @@ function Home() {
   const [avgUser, setAvgUser] = useState(0);
   const min = 0;
   const max = 5;
-  const [isSelected, setIsSelected] = useState(true);
 
   return (
     <Box
@@ -31,17 +30,18 @@ function Home() {
             Get Trolls
           </Button>
           <TextField
+            required
+            id="avgUser"
+            label="Avg Rating"
             type="number"
-            inputProps={{ min, max }}
+            helperText="Numbers between 1 and 6"
             value={avgUser}
             onChange={(e) => {
-              let value = parseInt(e.target.value, 10);
-              if (value >= max) value = max;
+              let value = e.target.value;
+              if (value > max) value = max;
               if (value < min) value = min;
               setAvgUser(value);
             }}
-            required
-            label="Number"
           />
         </Stack>
         <Stack spacing={2} direction="row">
