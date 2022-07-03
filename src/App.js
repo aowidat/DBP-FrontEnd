@@ -13,6 +13,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import NotFound from './Components/NotFound';
 
 function App() {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ function App() {
         <Route path="/review/:parm1" element={<Review />} />
         <Route path="/user/:parm1" element={<ListOfUsers />} />
         <Route path="/getoffers/:id" element={<ListOfOffers />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

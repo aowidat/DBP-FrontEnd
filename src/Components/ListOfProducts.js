@@ -7,12 +7,12 @@ import {
   GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams, Navigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { Avatar, Button, createTheme } from "@mui/material";
-import Stack from "@mui/material/Stack";
+import NotFound from './NotFound';
 import { ThemeProvider } from "@emotion/react";
-import Box from '@mui/material/Box';
+
 
 function renderRating(params) {
   return <Rating readOnly precision={0.25} value={params.value} />;
@@ -137,6 +137,7 @@ export default function ListOfProducts() {
   const [isSelected, setIsSelected] = useState(true);
   const [pageSize, setPageSize] = React.useState(10);
   const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   let { parm1, parm2 } = useParams();
   const CustomToolbar = () => {
     return (
@@ -187,33 +188,38 @@ export default function ListOfProducts() {
       fetch(`http://localhost:8080/category/productPerPath/${parm2}`)
         .then((res) => res.json())
         .then((data) => setProducts(data)).then(setIsLoading(false));
+    } else {
+      setNotFound(true);
     }
   }, []);
 
   return (
-    <ThemeProvider theme={myTheme}>
-      <DataGrid
-        showCellRightBorder={true}
-        autoHeight
-        onSelectionModelChange={(ids) => {
-          const selectedIDs = new Set(ids);
-          const selectedRows = products.filter((row) =>
-            selectedIDs.has(row.id)
-          );
-          setIsSelected(false);
-          setSelectedRows(selectedRows);
-        }}
-        rows={products}
-        columns={columns}
-        pageSize={pageSize}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        rowsPerPageOptions={[5, 10, 20, 50, 99]}
-        pagination
-        loading={isLoading}
-        components={{
-          Toolbar: CustomToolbar
-        }}
-      />
-    </ThemeProvider>
+    <>
+      {notFound && <NotFound />}
+      <ThemeProvider theme={myTheme}>
+        <DataGrid
+          showCellRightBorder={true}
+          autoHeight
+          onSelectionModelChange={(ids) => {
+            const selectedIDs = new Set(ids);
+            const selectedRows = products.filter((row) =>
+              selectedIDs.has(row.id)
+            );
+            setIsSelected(false);
+            setSelectedRows(selectedRows);
+          }}
+          rows={products}
+          columns={columns}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowsPerPageOptions={[5, 10, 20, 50, 99]}
+          pagination
+          loading={isLoading}
+          components={{
+            Toolbar: CustomToolbar
+          }}
+        />
+      </ThemeProvider>
+    </>
   );
 }
