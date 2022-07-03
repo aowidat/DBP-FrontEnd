@@ -10,8 +10,8 @@ function Home() {
   const [pattern, setPattern] = useState("");
   const [sim, setSim] = useState("");
   const [path, setPath] = useState("");
-  const [avgUser, setAvgUser] = useState(0);
-  const min = 0;
+  const [avgUser, setAvgUser] = useState(1);
+  const min = 1;
   const max = 5;
 
   return (
@@ -48,6 +48,7 @@ function Home() {
           <Button
             variant="contained"
             href={`/product/byId/${id}`}
+            disabled={!id.length > 0}
           >Product by ID
           </Button>
           <TextField
@@ -58,12 +59,11 @@ function Home() {
             label="Product ID"
           />
         </Stack>
-
         <Stack spacing={2} direction="row">
-
           <Button
             variant="contained"
             href={`/product/bypattern/${pattern}`}
+            disabled={!pattern.length > 0}
           >By Pattern
           </Button>
           <TextField
@@ -74,12 +74,11 @@ function Home() {
             label="Product by Pattern"
           />
         </Stack>
-
         <Stack spacing={2} direction="row">
-
           <Button
             variant="contained"
             href={`/product/similars/${sim}`}
+            disabled={!sim.length > 0}
           >similar cheaper
           </Button>
           <TextField
@@ -91,10 +90,10 @@ function Home() {
           />
         </Stack>
         <Stack spacing={2} direction="row">
-
           <Button
             variant="contained"
             href={`/product/byPath/${path}`}
+            disabled={!path.length > 0}
           >Products by path
           </Button>
           <TextField
