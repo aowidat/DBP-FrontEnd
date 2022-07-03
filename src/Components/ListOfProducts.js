@@ -1,11 +1,18 @@
 import * as React from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid, GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+} from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { Avatar, Button, createTheme } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { ThemeProvider } from "@emotion/react";
+import Box from '@mui/material/Box';
 
 function renderRating(params) {
   return <Rating readOnly precision={0.25} value={params.value} />;
@@ -25,7 +32,6 @@ export default function ListOfProducts() {
       headerAlign: "center",
       align: "center",
       renderCell: renderImage,
-
     },
     {
       field: "id",
@@ -105,6 +111,15 @@ export default function ListOfProducts() {
     components: {
       MuiDataGrid: {
         styleOverrides: {
+          root: {
+            '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
+              outline: 'none',
+            },
+
+            '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
+              outline: 'none',
+            },
+          },
           row: {
             "&.Mui-selected": {
               backgroundColor: "lightblue",
@@ -118,96 +133,87 @@ export default function ListOfProducts() {
       },
     },
   });
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState([]);
   const [isSelected, setIsSelected] = useState(true);
+  const [pageSize, setPageSize] = React.useState(10);
+  const [isLoading, setIsLoading] = useState(true);
   let { parm1, parm2 } = useParams();
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+        <Button
+          variant="text"
+          disabled={isSelected}
+          href={`/getoffers/${selectedRows[0]?.id}`}
+        >
+          Offers
+        </Button>
+        <Button
+          disabled={isSelected}
+          variant="text"
+          href={`/review/${selectedRows[0]?.id}`}
+        >
+          add review
+        </Button>
+      </GridToolbarContainer>
+    );
+  }
   useEffect(() => {
     if (parm1 === "bypattern") {
       fetch(`http://localhost:8080/product/findAllByPattern/${parm2}`)
         .then((res) => res.json())
-        .then((data) => setProducts(data));
+        .then((data) => setProducts(data)).then(setIsLoading(false));
     } else if (parm1 === "byId") {
       fetch(`http://localhost:8080/product/findById/${parm2}`)
         .then((res) => res.json())
-        .then((data) => setProducts(data));
+        .then((data) => setProducts(data)).then(setIsLoading(false));
     } else if (parm1 === "allproduct") {
       fetch(`http://localhost:8080/product/getAllProduct/`)
         .then((res) => res.json())
-        .then((data) => setProducts(data));
+        .then((data) => setProducts(data)).then(setIsLoading(false));
     } else if (parm1 === "similars") {
       fetch(`http://localhost:8080/product/getSimilarCheaperProduct/${parm2}`)
         .then((res) => res.json())
-        .then((data) => setProducts(data));
+        .then((data) => setProducts(data)).then(setIsLoading(false));
     } else if (parm1 === "topproduct") {
       fetch(`http://localhost:8080/product/TopProducts/`)
         .then((res) => res.json())
-        .then((data) => setProducts(data));
+        .then((data) => setProducts(data)).then(setIsLoading(false));
     } else if (parm1 === "byPath") {
       fetch(`http://localhost:8080/category/productPerPath/${parm2}`)
         .then((res) => res.json())
-        .then((data) => setProducts(data));
+        .then((data) => setProducts(data)).then(setIsLoading(false));
     }
   }, []);
 
   return (
     <ThemeProvider theme={myTheme}>
-      <div style={{ height: 650, width: "100%" }}>
-        {products && (
-          <DataGrid
-            onSelectionModelChange={(ids) => {
-              const selectedIDs = new Set(ids);
-              const selectedRows = products.filter((row) =>
-                selectedIDs.has(row.id)
-              );
-              setIsSelected(false);
-              setSelectedRows(selectedRows);
-            }}
-            experimentalFeatures={{ newEditingApi: true }}
-            rows={products}
-            columns={columns}
-            pageSize={9}
-            columnSizer="Star"
-            rowsPerPageOptions={[9]}
-            components={{
-              Toolbar: GridToolbar,
-            }}
-            sx={{
-              m: 5,
-              boxShadow: 2,
-              border: 2,
-              borderColor: "primary.light",
-              "& .MuiDataGrid-cell:hover": {
-                color: "primary.main",
-              },
-            }}
-          />
-        )}
-        <Stack
-          direction="row"
-          spacing={2}
-          style={{
-            position: "relative",
-            left: '300px',
-            // top: "102%",
-            // transform: "translate(-50%, -50%)",
-          }}
-        >
-          <Button
-            variant="contained"
-            disabled={isSelected}
-            href={`/getoffers/${selectedRows[0]?.id}`}
-          >
-            Offers
-          </Button>
-          <Button
-            disabled={isSelected}
-            variant="contained"
-            href={`/review/${selectedRows[0]?.id}`}
-          >
-            add review
-          </Button>
-        </Stack>
-      </div>
+      <DataGrid
+        showCellRightBorder={true}
+        autoHeight
+        onSelectionModelChange={(ids) => {
+          const selectedIDs = new Set(ids);
+          const selectedRows = products.filter((row) =>
+            selectedIDs.has(row.id)
+          );
+          setIsSelected(false);
+          setSelectedRows(selectedRows);
+        }}
+        rows={products}
+        columns={columns}
+        pageSize={pageSize}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+        rowsPerPageOptions={[5, 10, 20, 50, 99]}
+        pagination
+        loading={isLoading}
+        components={{
+          Toolbar: CustomToolbar
+        }}
+      />
     </ThemeProvider>
   );
 }
