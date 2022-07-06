@@ -20,6 +20,7 @@
 ### 3. Abgabe
 
 - clone the porject `git clone https://github.com/aowidat/DBP-Store-FrontEnd.git`
+- run `cd DBP-Store-FrontEnd` 
 - run `npm install`
 - run `npm start`
 - have fun
