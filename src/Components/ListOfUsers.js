@@ -7,16 +7,16 @@ function ListOfUsers() {
     {
       field: "id",
       headerName: "id",
-      width: 150,
       headerAlign: "center",
       align: "center",
+      flex: 1
     },
     {
       field: "name",
       headerName: "name",
-      width: 150,
       headerAlign: "center",
       align: "center",
+      flex: 1
     },
   ];
   const [users, setUsers] = useState([]);
@@ -27,31 +27,21 @@ function ListOfUsers() {
       .then((data) => setUsers(data));
   }, []);
   return (
-    <div style={{ height: 650, width: "100%" }}>
+    <>
       {users && (
         <DataGrid
-          experimentalFeatures={{ newEditingApi: true }}
-          //   getRowHeight={() => "auto"}
           rows={users}
+          autoHeight
+          showCellRightBorder={true}
           columns={columns}
           pageSize={10}
-          columnSizer="Star"
           rowsPerPageOptions={[10]}
           components={{
             Toolbar: GridToolbar,
           }}
-          sx={{
-            m: 5,
-            boxShadow: 2,
-            border: 2,
-            borderColor: "primary.light",
-            "& .MuiDataGrid-cell:hover": {
-              color: "primary.main",
-            },
-          }}
         />
       )}
-    </div>
+    </>
   );
 }
 export default ListOfUsers;

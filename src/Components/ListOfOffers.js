@@ -1,46 +1,37 @@
 import * as React from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import Stack from "@mui/material/Stack";
-import { Button } from "@mui/material";
 
 export default function ListOfReviews() {
   const columns = [
     {
       field: "id",
       headerName: "id",
-      width: 150,
       headerAlign: "center",
       align: "center",
+      flex: 1,
     },
     {
       field: "price",
       headerName: "Price",
-      width: 150,
       headerAlign: "center",
       align: "center",
+      flex: 1,
     },
     {
       field: "status",
       headerName: "Status",
-      width: 150,
       headerAlign: "center",
       align: "center",
+      flex: 1,
     },
     {
       field: "product_id",
       headerName: "Product ID",
-      width: 150,
       headerAlign: "center",
       align: "center",
+      flex: 1,
       valueGetter: () => {
         let result = id;
         return result;
@@ -49,11 +40,11 @@ export default function ListOfReviews() {
     {
       field: "store",
       headerName: "Store",
-      width: 150,
       headerAlign: "center",
       align: "center",
+      flex: 1,
       valueGetter: (params) => {
-        let result = params.row.store.id;
+        let result = params.row.store.name;
         return result;
       },
     },
@@ -68,10 +59,9 @@ export default function ListOfReviews() {
   }, []);
 
   return (
-    <div style={{ height: 650, width: "100%" }}>
+    <>
       {products && (
         <DataGrid
-          experimentalFeatures={{ newEditingApi: true }}
           rows={products}
           columns={columns}
           pageSize={10}
@@ -80,17 +70,10 @@ export default function ListOfReviews() {
           components={{
             Toolbar: GridToolbar,
           }}
-          sx={{
-            m: 5,
-            boxShadow: 2,
-            border: 2,
-            borderColor: "primary.light",
-            "& .MuiDataGrid-cell:hover": {
-              color: "primary.main",
-            },
-          }}
+          showCellRightBorder={true}
+          autoHeight
         />
       )}
-    </div>
+    </>
   );
 }
